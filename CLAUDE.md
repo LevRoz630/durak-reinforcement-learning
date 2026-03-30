@@ -1,10 +1,10 @@
 # Durak Reinforcement Learning
 
-RL agents for the card game Durak. C++ game engine with Python training pipeline, bridged via pybind11. This is a learning project — the goal is to learn C++ and RL, not just produce code.
+RL agents for the card game Durak. Python game engine with Numba/JIT for speed, Python training pipeline. This is a learning project — the goal is to learn RL, not just produce code.
+
+**Future:** Port engine to C++ (via pybind11) once the Python version is stable and RL training is working.
 
 ## Build
-
-Single command builds everything (C++ engine via pybind11 + Python package):
 
 ```bash
 pip install -e ".[dev]"
@@ -15,8 +15,6 @@ pip install -e ".[dev]"
 ```bash
 pytest
 ```
-
-Python tests only. C++ is tested through the pybind11 bindings.
 
 ## Lint & Format
 
@@ -33,14 +31,15 @@ mypy src/                # type check
 
 ## How Claude Should Help
 
-### C++ (learning mode)
+### Engine (learning mode)
 
-The user is learning C++. Do not just write complete implementations.
+The user is learning game engine design. Do not just write complete implementations.
 
 - **Explain** the concept or pattern before writing code
-- **Scaffold** the structure: files, classes, function signatures, includes
+- **Scaffold** the structure: files, classes, function signatures
 - **Leave TODOs** for core logic: game rules, state representation, data structures
-- When the user writes C++, review it and explain what could be improved and why
+- When the user writes code, review it and explain what could be improved and why
+- Design the engine so it can be ported to C++ later (clean interfaces, minimal Python-specific tricks)
 
 ### RL (learning mode)
 
@@ -61,8 +60,7 @@ The user is learning reinforcement learning. Same approach:
 
 ```
 src/
-  engine/       # C++ game engine (Durak rules, game state, card logic)
-  bindings/     # pybind11 bindings exposing engine to Python
+  engine/       # Python game engine (Durak rules, game state, card logic)
   training/     # Python training pipeline (agents, environments, training loops)
 tests/          # pytest tests
 docs/           # research papers, reading notes
