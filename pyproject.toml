@@ -1,0 +1,32 @@
+[project]
+name = "durak-rl"
+version = "0.1.0"
+description = "Reinforcement learning agents for the card game Durak, with a C++ game engine and Python training pipeline"
+requires-python = ">=3.12"
+dependencies = [
+    "numpy>=2.0",
+    "torch>=2.2",
+    "gymnasium>=1.0",
+    "matplotlib>=3.9",
+    "tqdm>=4.66",
+    "pybind11>=2.12",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+    "ruff>=0.4",
+    "mypy>=1.10",
+]
+
+[build-system]
+requires = ["setuptools>=75.0", "pybind11>=2.12"]
+build-backend = "setuptools.build_meta"
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
