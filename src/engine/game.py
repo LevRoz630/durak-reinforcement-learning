@@ -21,7 +21,27 @@ class Game:
 
         TODO(human): Implement legal action generation.
         """
-        raise NotImplementedError
+        if self.state.phase == Phase.ATTACK:
+            if not self.state.table:
+                # Must play a card
+                return [("attack", card) for card in self.state.hands[self.state.attacker_id]]
+            else:
+                # Can throw in or stop
+                legal_actions = []
+                for card in self.state.hands[self.state.attacker_id]:
+                    if card.rank in self.state.table_ranks and len(self.state.table) < self.state.throw_in_limit:
+                        legal_actions.append(("throw_in", card))
+                legal_actions.append(("stop", None))
+                return legal_actions
+        else:  # DEFEND phase
+            legal_actions = []
+            for atk_card, dfn_card in self.state.table:
+                if dfn_card is None:  # Uncovered attack card
+                    for card in self.state.hands[self.state.defender_id]:
+                        if self._can_defend(atk_card, card):
+                            legal_actions.append(("defend", atk_card, card))
+            legal_actions.append(("pick_up", None))
+            return legal_actions
 
     def attack(self, card: Card) -> None:
         """Attacker plays a card onto the table.
@@ -33,6 +53,14 @@ class Game:
 
         TODO(human): Implement attack logic.
         """
+        if self.state.phase != Phase.ATTACK:
+            raise ValueError("Cannot attack during DEFEND phase.")
+
+        self.state.hands[self.state.attacker_id].remove(card)
+        self.state.table.append((card, None))
+        self.state.phase = Phase.DEFEND
+        self._check_win()  # Check if attacker wins immediately (unlikely but possible)
+
         raise NotImplementedError
 
     def defend(self, attack_card: Card, defense_card: Card) -> None:
@@ -91,6 +119,11 @@ class Game:
 
         TODO(human): Implement draw phase.
         """
+
+        for player in [self.state.attacker_id, self.state.defender_id]:
+            while len(self.state.hands[player]) < HAND_SIZE and self.state.deck.cards:
+                self.state.hands[player].append(self.state.deck.cards.pop())
+                
         raise NotImplementedError
 
     def _check_win(self) -> None:
@@ -100,4 +133,10 @@ class Game:
 
         TODO(human): Implement win detection.
         """
+        for hand in self.state.hands:
+            if not hand and not self.state.deck.cards:
+                # This player wins
+                self.state.winner = self.state.hands.index(hand)
+                break
+
         raise NotImplementedError
