@@ -63,9 +63,22 @@ class Game:
         - Add (card, None) to table
         - Switch phase to DEFEND
         - Check for win (empty hand)
-
-        TODO(human): Implement throw-in logic.
         """
+        if self.state.phase != Phase.ATTACK:
+                raise ValueError("Cannot throw in during DEFEND phase.")
+
+        if card.rank not in self.state.table_ranks:
+            raise ValueError("Card rank must match a rank on the table.")
+
+        if len(self.state.table) >= self.state.throw_in_limit:
+            raise ValueError("Throw-in limit reached.")
+        if card not in self.state.hands[self.state.attacker_id]:
+            raise ValueError("Card not in hand.")
+
+        self.state.hands[self.state.attacker_id].remove(card)
+        self.state.table.append((card, None))
+        self.state.phase = Phase.DEFEND
+        self._check_win()
         
 
     def pick_up(self) -> None:
@@ -76,8 +89,22 @@ class Game:
         - End the bout (attacker stays the same)
         - Draw phase
 
-        TODO(human): Implement pick-up logic.
+        
         """
+        # Defender takes all cards
+        for atk_card, dfn_card in self.state.table:
+            self.state.hands[self.state.defender_id].append(atk_card)
+            if dfn_card is not None:
+                self.state.hands[self.state.defender_id].append(dfn_card)
+
+        # Clear table
+        self.state.table.clear()
+
+        # End bout: attacker stays the same, defender stays the same
+        self.state.phase = Phase.ATTACK
+
+        # Draw cards
+        self._draw_phase()
 
     def stop(self) -> None:
         """Attacker ends the bout (successful defense).
@@ -87,9 +114,35 @@ class Game:
         - Draw phase
         - Swap roles
 
-        TODO(human): Implement stop logic.
         """
+     # Successful defense -> move table cards to discard pile
+        for atk_card, dfn_card in self.state.table:
+            self.state.discard_pile.append(atk_card)
+            if dfn_card is not None:
+                self.state.discard_pile.append(dfn_card)
 
+        # Clear table
+        self.state.table.clear()
+
+        # Mark that first defense has happened
+        self.state.first_defense_completed = True
+
+        # Draw cards
+        self._draw_phase()
+
+        # Swap roles
+        self.state.attacker_id, self.state.defender_id = (
+            self.state.defender_id,
+            self.state.attacker_id,
+        )
+
+        # Reset phase
+        self.state.phase = Phase.ATTACK
+
+    def _can_defend(self, attack_card: Card, defense_card: Card) -> bool:
+        """Return True if defense_card can legally cover attack_card."""
+        return defense_card.beats(attack_card, self.state.trump_suit)
+    
     def _draw_phase(self) -> None:
         """Both players draw up to HAND_SIZE. Attacker draws first."""
         for player in [self.state.attacker_id, self.state.defender_id]:

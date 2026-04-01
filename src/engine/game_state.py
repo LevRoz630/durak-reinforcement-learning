@@ -22,6 +22,7 @@ class GameState:
         self.defender_id: int = (self.attacker_id + 1) % num_players
         self.num_players: int = num_players
         self.table: list[tuple[Card, Card | None]] = []
+        self.discard_pile: list[Card] = []
         self.phase: Phase = Phase.ATTACK
         self.first_defense_completed: bool = False
         self.winner: int | None = None
