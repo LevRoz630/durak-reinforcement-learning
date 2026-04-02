@@ -26,8 +26,7 @@ class Game:
                 for card in self.state.hands[self.state.attacker_id]:
                     if card.rank in self.state.table_ranks and len(self.state.table) < self.state.throw_in_limit:
                         legal_actions.append(("throw_in", card))
-                if not self.state.uncovered_cards:
-                    legal_actions.append(("stop", None))
+                legal_actions.append(("stop", None))
                 return legal_actions
         else:  # DEFEND phase
             legal_actions = []
@@ -117,6 +116,9 @@ class Game:
         All table cards go to the discard pile. The defender becomes the new attacker,
         and the next player in the ring becomes the new defender.
         """
+        if self.state.uncovered_cards:
+            raise ValueError("Cannot stop, not all attack cards are covered.")
+
         for atk_card, dfn_card in self.state.table:
             self.state.discard_pile.append(atk_card)
             self.state.discard_pile.append(dfn_card)
