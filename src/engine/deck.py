@@ -11,7 +11,7 @@ class Deck:
         self.rng = rng or random.Random()
         self.cards: list[Card] = list(ALL_CARDS)
         self.rng.shuffle(self.cards)
-        self.trump_suit: Suit = self.cards[-1].suit
+        self.trump_suit: Suit = self.cards[0].suit
 
     def deal(self, num_players: int) -> tuple[list[list[Card]], int]:
         """Deal HAND_SIZE cards to each player and determine first attacker.
@@ -46,4 +46,4 @@ class Deck:
         for _ in range(count):
             if not self.cards:
                 break
-            hand.append(self.cards.pop(0))
+            hand.append(self.cards.pop())
