@@ -8,6 +8,8 @@ Card encoding:
 All functions are pure integer arithmetic so they can be decorated with @njit.
 """
 
+import numpy as np
+
 NUM_CARDS = 36
 NUM_SUITS = 4
 NUM_RANKS = 9  # 6..Ace
@@ -80,10 +82,15 @@ def hand_size(hand: int) -> int:
     return count
 
 
-def hand_to_list(hand: int) -> list[int]:
-    """Expand bitmask hand to a list of card_ids (for iteration / debug)."""
-    result = []
+def hand_to_list(hand: int) -> np.ndarray:
+    """Expand bitmask hand to an array of card_ids.
+
+    Returns a numpy slice (not a Python list) so it is iterable under @njit.
+    """
+    result = np.empty(NUM_CARDS, dtype=np.int32)
+    count = 0
     for cid in range(NUM_CARDS):
-        if hand_contains(hand, cid):
-            result.append(cid)
-    return result
+        if hand & (1 << cid):
+            result[count] = cid
+            count += 1
+    return result[:count]
