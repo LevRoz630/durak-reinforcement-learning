@@ -55,10 +55,12 @@ def train(
             obs, mask = next_obs, next_mask
             step += 1
 
+            # Wait for learning_starts transitions before training — DQN is unstable
+            # when the replay buffer is too small (high correlation, poor targets).
             if len(buf) >= learning_starts:
                 agent.update(buf.sample(batch_size))
 
-            if step % target_update_freq == 0:
+            if step > 0 and step % target_update_freq == 0:
                 agent.sync_target()
 
         # Decay once per episode (not per step) — keeps exploration high during
