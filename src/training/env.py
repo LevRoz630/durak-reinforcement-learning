@@ -12,8 +12,8 @@ Action index encoding:
 import numpy as np
 
 from engine.fast_card import beats, hand_size, hand_to_list
-from engine.fast_game_state import PHASE_ATTACK, PHASE_DEFEND, FastGame, FastGameState
-from engine.obs_encode import OBS_DIM, encode_observation, legal_action_mask
+from engine.fast_game_state import PHASE_ATTACK, FastGame, FastGameState
+from engine.obs_encode import encode_observation, legal_action_mask
 
 
 def current_player(state: FastGameState) -> int:
@@ -79,3 +79,4 @@ def apply_action(game: FastGame, action_idx: int) -> None:
                 if beats(cid, int(atk_cid), int(s.trump_suit)):
                     game.defend(int(atk_cid), cid)
                     return
+            raise ValueError(f"Card {cid} cannot beat any uncovered attack card — illegal action.")
