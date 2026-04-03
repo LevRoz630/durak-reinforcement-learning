@@ -47,6 +47,3 @@ Podkidnoy (throw-in) Durak, 2-player (extensible to n-player).
 2. Deck (shuffle, deal)
 3. GameState (fields + initialization)
 4. Game logic (legal actions, play, cover, throw in, bout resolution, draw)
-
-## Mechanic Notes 
-- Cards get covered one by one autoamticcal getting assigned 
