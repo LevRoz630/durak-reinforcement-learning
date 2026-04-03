@@ -9,27 +9,32 @@ All functions are pure integer arithmetic so they can be decorated with @njit.
 """
 
 import numpy as np
+from numba import njit
 
 NUM_CARDS = 36
 NUM_SUITS = 4
 NUM_RANKS = 9  # 6..Ace
 
 
+@njit
 def card_id(suit: int, rank: int) -> int:
     """Encode (suit 0-3, rank 6-14) → card_id 0-35."""
     return suit * NUM_RANKS + (rank - 6)
 
 
+@njit
 def card_suit(cid: int) -> int:
     """Recover suit from card_id."""
     return cid // NUM_RANKS
 
 
+@njit
 def card_rank(cid: int) -> int:
     """Recover rank (6-14) from card_id."""
     return cid % NUM_RANKS + 6
 
 
+@njit
 def beats(cid_a: int, cid_b: int, trump_suit: int) -> bool:
     """Return True if card_a can beat card_b given trump_suit.
 
@@ -46,21 +51,25 @@ def beats(cid_a: int, cid_b: int, trump_suit: int) -> bool:
         return False
 
 
+@njit
 def hand_contains(hand: int, cid: int) -> bool:
     """Return True if card cid is present in the bitmask hand."""
     return bool(hand & (1 << cid))
 
 
+@njit
 def hand_add(hand: int, cid: int) -> int:
     """Return new hand bitmask with cid added."""
     return hand | (1 << cid)
 
 
+@njit
 def hand_remove(hand: int, cid: int) -> int:
     """Return new hand bitmask with cid removed."""
     return hand & ~(1 << cid)
 
 
+@njit
 def hand_size(hand: int) -> int:
     """Return number of cards in the bitmask hand.
 
@@ -82,6 +91,7 @@ def hand_size(hand: int) -> int:
     return count
 
 
+@njit
 def hand_to_list(hand: int) -> np.ndarray:
     """Expand bitmask hand to an array of card_ids.
 
