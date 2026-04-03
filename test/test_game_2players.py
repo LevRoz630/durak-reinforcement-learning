@@ -1,8 +1,8 @@
 import unittest
 
-from engine.game import Game
-from engine.game_state import Phase
-from engine.card import Card
+from engine.legacy.game import Game
+from engine.legacy.game_state import Phase
+from engine.legacy.card import Card
 
 # hand should be shown to player before actions have to be decided.
 def validate_state(game: Game) -> None:

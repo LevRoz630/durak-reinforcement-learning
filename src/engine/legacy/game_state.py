@@ -1,7 +1,7 @@
 from enum import IntEnum
 
-from engine.card import Card, Suit
-from engine.deck import Deck, HAND_SIZE
+from engine.legacy.card import Card, Suit
+from engine.legacy.deck import Deck, HAND_SIZE
 
 
 class Phase(IntEnum):

@@ -1,6 +1,6 @@
 import random
 
-from engine.card import Card, Rank, Suit
+from engine.legacy.card import Card, Rank, Suit
 
 ALL_CARDS = [Card(suit, rank) for suit in Suit for rank in Rank]
 HAND_SIZE = 6

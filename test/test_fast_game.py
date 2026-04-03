@@ -8,11 +8,11 @@ both games produce the same winner.
 
 import unittest
 
-from engine.card import Card
+from engine.legacy.card import Card
 from engine.fast_card import NUM_CARDS, card_rank, card_suit, hand_to_list
 from engine.fast_game_state import PHASE_ATTACK, PHASE_DEFEND, FastGame
-from engine.game import Game
-from engine.game_state import Phase
+from engine.legacy.game import Game
+from engine.legacy.game_state import Phase
 
 
 # ---------------------------------------------------------------------------

@@ -1,6 +1,6 @@
-from engine.card import Card
-from engine.deck import HAND_SIZE
-from engine.game_state import GameState, Phase
+from engine.legacy.card import Card
+from engine.legacy.deck import HAND_SIZE
+from engine.legacy.game_state import GameState, Phase
 
 
 class Game:
